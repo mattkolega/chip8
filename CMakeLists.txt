@@ -9,7 +9,10 @@ add_executable(chip-8 src/main.c
         src/vm.c
         src/vm.h
         src/interpreter.c
-        src/interpreter.h)
+        src/interpreter.h
+        src/utils.c
+        src/utils.h
+)
 
 target_link_libraries(chip-8
         PRIVATE

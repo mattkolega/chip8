@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "vm.h"
+#include "utils.h"
 
 void initContext(Chip8Context **chip8Context, char* romFilename) {
     *chip8Context = calloc(1, sizeof(Chip8Context));
@@ -38,15 +39,15 @@ void loadRom(char *filename, uint8_t *memory) {
 
 void fetchExecuteCycle(Chip8Context **chip8Context) {
     // Fetch
-    uint8_t nibbleOne = (*chip8Context)->memory[(*chip8Context)->pc];
-    uint8_t nibbleTwo = (*chip8Context)->memory[(*chip8Context)->pc + 1];
-    uint16_t instruction = nibbleOne << 8 | nibbleTwo;
+    uint8_t byteOne = (*chip8Context)->memory[(*chip8Context)->pc];
+    uint8_t byteTwo = (*chip8Context)->memory[(*chip8Context)->pc + 1];
+    uint16_t instruction = byteOne << 8 | byteTwo;
     (*chip8Context)->pc += 2;
 
     // Decode and Execute
-    switch ((instruction & 0xF000) >> 12) {  // Check first nibble of instruction
+    switch (getFirstNibble(instruction)) {  // Check first nibble of instruction
         case 0x0:
-            switch (instruction & 0x00FF) {  // Check second half of instruction
+            switch (getSecondNibble(instruction)) {  // Check second half of instruction
                 case 0xE0:
                     op_00E0((*chip8Context)->display);
                     break;
@@ -56,54 +57,54 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
             }
             break;
         case 0x1:
-            op_1NNN(&(*chip8Context)->pc, (instruction & 0x0FFF));
+            op_1NNN(&(*chip8Context)->pc, getLastThreeNibbles(instruction));
             break;
         case 0x2:
-            op_2NNN(&(*chip8Context)->pc, (*chip8Context)->stack, &(*chip8Context)->sp, (instruction & 0x0FFF));
+            op_2NNN(&(*chip8Context)->pc, (*chip8Context)->stack, &(*chip8Context)->sp, getLastThreeNibbles(instruction));
             break;
         case 0x3:
-            op_3XNN(&(*chip8Context)->pc, (*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_3XNN(&(*chip8Context)->pc, (*chip8Context)->v, getSecondNibble(instruction), getLastHalfInstruct(instruction));
             break;
         case 0x4:
-            op_4XNN(&(*chip8Context)->pc, (*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_4XNN(&(*chip8Context)->pc, (*chip8Context)->v, getSecondNibble(instruction), getLastHalfInstruct(instruction));
             break;
         case 0x5:
             op_5XY0(&(*chip8Context)->pc, (*chip8Context)->v, instruction);
             break;
         case 0x6:
-            op_6XNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_6XNN((*chip8Context)->v, getSecondNibble(instruction), getLastHalfInstruct(instruction));
             break;
         case 0x7:
-            op_7XNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_7XNN((*chip8Context)->v, getSecondNibble(instruction), getLastHalfInstruct(instruction));
             break;
         case 0x8:
-            switch (instruction & 0x000F) {  // Check last nibble of instruction
+            switch (getFourthNibble(instruction)) {  // Check last nibble of instruction
                 case 0x0:
-                    op_8XY0((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY0((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0x1:
-                    op_8XY1((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY1((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0x2:
-                    op_8XY2((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY2((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0x3:
-                    op_8XY3((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY3((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0x4:
-                    op_8XY4((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY4((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0x5:
-                    op_8XY5((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY5((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0x6:
-                    op_8XY6((*chip8Context)->v, (instruction & 0x0F00) >> 8);
+                    op_8XY6((*chip8Context)->v, getSecondNibble(instruction));
                     break;
                 case 0x7:
-                    op_8XY7((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY7((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0xE:
-                    op_8XYE((*chip8Context)->v, (instruction & 0x0F00) >> 8);
+                    op_8XYE((*chip8Context)->v, getSecondNibble(instruction));
                     break;
             }
             break;
@@ -111,21 +112,21 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
             op_9XY0(&(*chip8Context)->pc, (*chip8Context)->v, instruction);
             break;
         case 0xA:
-            op_ANNN(&(*chip8Context)->index, (instruction & 0x0FFF));
+            op_ANNN(&(*chip8Context)->index, getLastThreeNibbles(instruction));
             break;
         case 0xB:
-            op_BNNN(&(*chip8Context)->pc, (*chip8Context)->v, (instruction & 0x0FFF));
+            op_BNNN(&(*chip8Context)->pc, (*chip8Context)->v, getLastThreeNibbles(instruction));
             break;
         case 0xC:
-            op_CXNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_CXNN((*chip8Context)->v, getSecondNibble(instruction), getLastHalfInstruct(instruction));
             break;
         case 0xD:
             op_DXYN(chip8Context, instruction);
             break;
         case 0xF:
-            switch ((instruction & 0x00F0) >> 4) {
+            switch (getThirdNibble(instruction)) {
                 case 0x0:
-                    switch (instruction & 0x000F) {
+                    switch (getFourthNibble(instruction)) {
                         case 0x7:
                             break;
                         case 0xA:
@@ -133,26 +134,26 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
                     }
                     break;
                 case 0x1:
-                    switch (instruction & 0x000F) {
+                    switch (getFourthNibble(instruction)) {
                         case 0x5:
                             break;
                         case 0x8:
                             break;
                         case 0xE:
-                            op_FX1E((*chip8Context)->v, &(*chip8Context)->index, (instruction & 0x0F00) >> 8);
+                            op_FX1E((*chip8Context)->v, &(*chip8Context)->index, getSecondNibble(instruction));
                             break;
                     }
                     break;
                 case 0x2:
                     break;
                 case 0x3:
-                    op_FX33(chip8Context, (instruction & 0x0F00) >> 8);
+                    op_FX33(chip8Context, getSecondNibble(instruction));
                     break;
                 case 0x5:
-                    op_FX55(chip8Context, (instruction & 0x0F00) >> 8);
+                    op_FX55(chip8Context, getSecondNibble(instruction));
                     break;
                 case 0x6:
-                    op_FX65(chip8Context, (instruction & 0x0F00) >> 8);
+                    op_FX65(chip8Context, getSecondNibble(instruction));
                     break;
             }
             break;
@@ -189,8 +190,8 @@ void op_4XNN(uint16_t *pc, uint8_t *v, uint8_t registerIndex, uint8_t value) {
 }
 
 void op_5XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
-    int xIndex = (instruction & 0x0F00) >> 8;
-    int yIndex = (instruction & 0x00F0) >> 4;
+    int xIndex = getSecondNibble(instruction);
+    int yIndex = getThirdNibble(instruction);
 
     if (v[xIndex] == v[yIndex])
         *pc += 2;
@@ -256,8 +257,8 @@ void op_8XYE(uint8_t *v, int xRegisterIndex) {
 }
 
 void op_9XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
-    int xIndex = (instruction & 0x0F00) >> 8;
-    int yIndex = (instruction & 0x00F0) >> 4;
+    int xIndex = getSecondNibble(instruction);
+    int yIndex = getThirdNibble(instruction);
 
     if (v[xIndex] != v[yIndex])
         *pc += 2;
@@ -279,13 +280,13 @@ void op_CXNN(uint8_t *v, uint8_t registerIndex, uint8_t value) {
 }
 
 void op_DXYN(Chip8Context **chip8Context, uint16_t instruction) {
-    int xIndex = (instruction & 0x0F00) >> 8;
-    int yIndex = (instruction & 0x00F0) >> 4;
+    int xIndex = getSecondNibble(instruction);
+    int yIndex = getThirdNibble(instruction);
 
     int xCoord = (*chip8Context)->v[xIndex] % 64;  // Make starting xCoord wrap around
     int yCoord = (*chip8Context)->v[yIndex] % 32;  // Make starting yCoord wrap around
 
-    int spriteRows = instruction & 0x000F;  // Get number of rows to draw for sprite
+    int spriteRows = getFourthNibble(instruction);  // Get number of rows to draw for sprite
 
     (*chip8Context)->v[0xF] = 0;  // Set VF register to 0
 
