@@ -102,6 +102,15 @@ void op_CXNN(uint8_t *v, uint8_t registerIndex, uint8_t value);
 // Draws n-width sprite to screen
 void op_DXYN(Chip8Context **chip8Context, uint16_t instruction);
 
+// Sets VX to delayTimer value
+void op_FX07(uint8_t *v, uint8_t *delayTimer, uint8_t registerIndex);
+
+// Sets delayTimer to VX value
+void op_FX15(uint8_t *v, uint8_t *delayTimer, uint8_t registerIndex);
+
+// Sets soundTimer to VX value
+void op_FX18(uint8_t *v, uint8_t *soundTimer, uint8_t registerIndex);
+
 // Adds value in VX to index register
 void op_FX1E(uint8_t *v, uint16_t *index, uint8_t registerIndex);
 

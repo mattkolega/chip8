@@ -153,6 +153,7 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
                 case 0x0:
                     switch (getFourthNibble(instruction)) {
                         case 0x7:
+                            op_FX07((*chip8Context)->v, &(*chip8Context)->delayTimer, getSecondNibble(instruction));
                             break;
                         case 0xA:
                             break;
@@ -161,8 +162,10 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
                 case 0x1:
                     switch (getFourthNibble(instruction)) {
                         case 0x5:
+                            op_FX15((*chip8Context)->v, &(*chip8Context)->delayTimer, getSecondNibble(instruction));
                             break;
                         case 0x8:
+                            op_FX15((*chip8Context)->v, &(*chip8Context)->soundTimer, getSecondNibble(instruction));
                             break;
                         case 0xE:
                             op_FX1E((*chip8Context)->v, &(*chip8Context)->index, getSecondNibble(instruction));
@@ -348,6 +351,18 @@ void op_DXYN(Chip8Context **chip8Context, uint16_t instruction) {
             }
         }
     }
+}
+
+void op_FX07(uint8_t *v, uint8_t *delayTimer, uint8_t registerIndex) {
+    v[registerIndex] = *delayTimer;
+}
+
+void op_FX15(uint8_t *v, uint8_t *delayTimer, uint8_t registerIndex) {
+    *delayTimer = v[registerIndex];
+}
+
+void op_FX18(uint8_t *v, uint8_t *soundTimer, uint8_t registerIndex) {
+    *soundTimer = v[registerIndex];
 }
 
 void op_FX1E(uint8_t *v, uint16_t *index, uint8_t registerIndex) {

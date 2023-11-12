@@ -5,10 +5,11 @@
 #include "interpreter.h"
 #include "vm.h"
 
-const int CYCLES_PER_FRAME = 500 / 60;
+const int FRAMES_PER_SECOND = 60;
+const int CYCLES_PER_FRAME = 500 / FRAMES_PER_SECOND;
 
 int main(int argc, char *argv[]) {
-    char* romFilename = NULL;
+    char *romFilename = NULL;
 
     if (argc == 2) {
         romFilename = argv[1];
@@ -32,18 +33,24 @@ int main(int argc, char *argv[]) {
         uint64_t start = SDL_GetPerformanceCounter();
 
         pollEvents(&evt, &quit);
-        for (int i = 0; i < CYCLES_PER_FRAME; i++) {  // Run fetchExecuteCycle roughly 500 times per second
+
+        for (int i = 0; i < CYCLES_PER_FRAME; i++)  // Run fetchExecuteCycle roughly 500 times per second
             fetchExecuteCycle(&chip8Context);
-        }
+
+        if (chip8Context->delayTimer > 0)
+            (chip8Context->delayTimer)--;
+        if (chip8Context->soundTimer > 0)
+            (chip8Context->soundTimer)--;
+
         updateScreen(renderer, texture, chip8Context->display);
 
         uint64_t end = SDL_GetPerformanceCounter();
 
         float elapsedMS = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;  // Calculate frame time
-        float delayTime = floorf(16.666f - elapsedMS);
+        float frameDelay = floorf(16.666f - elapsedMS);
 
-        if (delayTime > 0) {  // Cap FPS to 60
-            SDL_Delay(delayTime);
+        if (frameDelay > 0) {  // Cap FPS
+            SDL_Delay(frameDelay);
         }
     }
 
