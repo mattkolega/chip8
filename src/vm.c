@@ -48,79 +48,79 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
         case 0x0:
             switch (instruction & 0x00FF) {  // Check second half of instruction
                 case 0xE0:
-                    Op_00E0((*chip8Context)->display);
+                    op_00E0((*chip8Context)->display);
                     break;
                 case 0xEE:
-                    Op_00EE(&(*chip8Context)->pc, (*chip8Context)->stack, &(*chip8Context)->sp);
+                    op_00EE(&(*chip8Context)->pc, (*chip8Context)->stack, &(*chip8Context)->sp);
                     break;
             }
             break;
         case 0x1:
-            Op_1NNN(&(*chip8Context)->pc, (instruction & 0x0FFF));
+            op_1NNN(&(*chip8Context)->pc, (instruction & 0x0FFF));
             break;
         case 0x2:
-            Op_2NNN(&(*chip8Context)->pc, (*chip8Context)->stack, &(*chip8Context)->sp, (instruction & 0x0FFF));
+            op_2NNN(&(*chip8Context)->pc, (*chip8Context)->stack, &(*chip8Context)->sp, (instruction & 0x0FFF));
             break;
         case 0x3:
-            Op_3XNN(&(*chip8Context)->pc, (*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_3XNN(&(*chip8Context)->pc, (*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
             break;
         case 0x4:
-            Op_4XNN(&(*chip8Context)->pc, (*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_4XNN(&(*chip8Context)->pc, (*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
             break;
         case 0x5:
-            Op_5XY0(&(*chip8Context)->pc, (*chip8Context)->v, instruction);
+            op_5XY0(&(*chip8Context)->pc, (*chip8Context)->v, instruction);
             break;
         case 0x6:
-            Op_6XNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_6XNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
             break;
         case 0x7:
-            Op_7XNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_7XNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
             break;
         case 0x8:
             switch (instruction & 0x000F) {  // Check last nibble of instruction
                 case 0x0:
-                    Op_8XY0((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY0((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                     break;
                 case 0x1:
-                    Op_8XY1((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY1((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                     break;
                 case 0x2:
-                    Op_8XY2((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY2((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                     break;
                 case 0x3:
-                    Op_8XY3((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY3((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                     break;
                 case 0x4:
-                    Op_8XY4((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY4((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                     break;
                 case 0x5:
-                    Op_8XY5((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY5((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                     break;
                 case 0x6:
-                    Op_8XY6((*chip8Context)->v, (instruction & 0x0F00) >> 8);
+                    op_8XY6((*chip8Context)->v, (instruction & 0x0F00) >> 8);
                     break;
                 case 0x7:
-                    Op_8XY7((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
+                    op_8XY7((*chip8Context)->v, (instruction & 0x0F00) >> 8, (instruction & 0x00F0) >> 4);
                     break;
                 case 0xE:
-                    Op_8XYE((*chip8Context)->v, (instruction & 0x0F00) >> 8);
+                    op_8XYE((*chip8Context)->v, (instruction & 0x0F00) >> 8);
                     break;
             }
             break;
         case 0x9:
-            Op_9XY0(&(*chip8Context)->pc, (*chip8Context)->v, instruction);
+            op_9XY0(&(*chip8Context)->pc, (*chip8Context)->v, instruction);
             break;
         case 0xA:
-            Op_ANNN(&(*chip8Context)->index, (instruction & 0x0FFF));
+            op_ANNN(&(*chip8Context)->index, (instruction & 0x0FFF));
             break;
         case 0xB:
-            Op_BNNN(&(*chip8Context)->pc, (*chip8Context)->v, (instruction & 0x0FFF));
+            op_BNNN(&(*chip8Context)->pc, (*chip8Context)->v, (instruction & 0x0FFF));
             break;
         case 0xC:
-            Op_CXNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
+            op_CXNN((*chip8Context)->v, ((instruction & 0x0F00) >> 8), (instruction & 0x00FF));
             break;
         case 0xD:
-            Op_DXYN(chip8Context, instruction);
+            op_DXYN(chip8Context, instruction);
             break;
         case 0xF:
             switch ((instruction & 0x00F0) >> 4) {
@@ -139,56 +139,56 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
                         case 0x8:
                             break;
                         case 0xE:
-                            Op_FX1E((*chip8Context)->v, &(*chip8Context)->index, (instruction & 0x0F00) >> 8);
+                            op_FX1E((*chip8Context)->v, &(*chip8Context)->index, (instruction & 0x0F00) >> 8);
                             break;
                     }
                     break;
                 case 0x2:
                     break;
                 case 0x3:
-                    Op_FX33(chip8Context, (instruction & 0x0F00) >> 8);
+                    op_FX33(chip8Context, (instruction & 0x0F00) >> 8);
                     break;
                 case 0x5:
-                    Op_FX55(chip8Context, (instruction & 0x0F00) >> 8);
+                    op_FX55(chip8Context, (instruction & 0x0F00) >> 8);
                     break;
                 case 0x6:
-                    Op_FX65(chip8Context, (instruction & 0x0F00) >> 8);
+                    op_FX65(chip8Context, (instruction & 0x0F00) >> 8);
                     break;
             }
             break;
     }
 }
 
-void Op_00E0(bool display[][64]) {
+void op_00E0(bool display[][64]) {
     memset(display, 0, (32 * 64) * sizeof(bool));
 }
 
-void Op_00EE(uint16_t *pc, uint16_t *stack, uint8_t *sp) {
+void op_00EE(uint16_t *pc, uint16_t *stack, uint8_t *sp) {
     (*sp)--;
     *pc = stack[*sp];
 }
 
-void Op_1NNN(uint16_t *pc, uint16_t address) {
+void op_1NNN(uint16_t *pc, uint16_t address) {
     *pc = address;
 }
 
-void Op_2NNN(uint16_t *pc, uint16_t *stack, uint8_t *sp, uint16_t address) {
+void op_2NNN(uint16_t *pc, uint16_t *stack, uint8_t *sp, uint16_t address) {
     stack[*sp] = *pc;
     (*sp)++;
     *pc = address;
 }
 
-void Op_3XNN(uint16_t *pc, uint8_t *v, uint8_t registerIndex, uint8_t value) {
+void op_3XNN(uint16_t *pc, uint8_t *v, uint8_t registerIndex, uint8_t value) {
     if (v[registerIndex] == value)
         *pc += 2;
 }
 
-void Op_4XNN(uint16_t *pc, uint8_t *v, uint8_t registerIndex, uint8_t value) {
+void op_4XNN(uint16_t *pc, uint8_t *v, uint8_t registerIndex, uint8_t value) {
     if (v[registerIndex] != value)
         *pc += 2;
 }
 
-void Op_5XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
+void op_5XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
     int xIndex = (instruction & 0x0F00) >> 8;
     int yIndex = (instruction & 0x00F0) >> 4;
 
@@ -196,31 +196,31 @@ void Op_5XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
         *pc += 2;
 }
 
-void Op_6XNN(uint8_t *v, uint8_t registerIndex, uint8_t value) {
+void op_6XNN(uint8_t *v, uint8_t registerIndex, uint8_t value) {
     v[registerIndex] = value;
 }
 
-void Op_7XNN(uint8_t *v, uint8_t registerIndex, uint8_t value) {
+void op_7XNN(uint8_t *v, uint8_t registerIndex, uint8_t value) {
     v[registerIndex] += value;
 }
 
-void Op_8XY0(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+void op_8XY0(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] = v[yRegisterIndex];
 }
 
-void Op_8XY1(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+void op_8XY1(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] |= v[yRegisterIndex];
 }
 
-void Op_8XY2(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+void op_8XY2(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] &= v[yRegisterIndex];
 }
 
-void Op_8XY3(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+void op_8XY3(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] ^= v[yRegisterIndex];
 }
 
-void Op_8XY4(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+void op_8XY4(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     uint8_t sum = v[xRegisterIndex] + v[yRegisterIndex];
     v[xRegisterIndex] = sum;
     if (sum > 255)  // Test for overflow
@@ -229,7 +229,7 @@ void Op_8XY4(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
         v[0xF] = 0;
 }
 
-void Op_8XY5(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+void op_8XY5(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] -= v[yRegisterIndex];
     if (v[xRegisterIndex] > v[yRegisterIndex])
         v[0xF] = 1;
@@ -237,12 +237,12 @@ void Op_8XY5(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
         v[0xF] = 0;
 }
 
-void Op_8XY6(uint8_t *v, int xRegisterIndex) {
+void op_8XY6(uint8_t *v, int xRegisterIndex) {
     v[0xF] = (v[xRegisterIndex] & 0b00000001);  // Set VF to value of bit to be shifted
     v[xRegisterIndex] >>= 1;
 }
 
-void Op_8XY7(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+void op_8XY7(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] = v[yRegisterIndex] - v[xRegisterIndex];
     if (v[yRegisterIndex] > v[xRegisterIndex])
         v[0xF] = 1;
@@ -250,12 +250,12 @@ void Op_8XY7(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
         v[0xF] = 0;
 }
 
-void Op_8XYE(uint8_t *v, int xRegisterIndex) {
+void op_8XYE(uint8_t *v, int xRegisterIndex) {
     v[0xF] = (v[xRegisterIndex] & 0b10000000) >> 7;  // Set VF to value of bit to be shifted
     v[xRegisterIndex] <<= 1;
 }
 
-void Op_9XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
+void op_9XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
     int xIndex = (instruction & 0x0F00) >> 8;
     int yIndex = (instruction & 0x00F0) >> 4;
 
@@ -263,22 +263,22 @@ void Op_9XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
         *pc += 2;
 }
 
-void Op_ANNN(uint16_t *index, uint16_t address) {
+void op_ANNN(uint16_t *index, uint16_t address) {
     *index = address;
 }
 
-void Op_BNNN(uint16_t *pc, uint8_t *v, uint16_t address) {
+void op_BNNN(uint16_t *pc, uint8_t *v, uint16_t address) {
     *pc = address + v[0];
 }
 
-void Op_CXNN(uint8_t *v, uint8_t registerIndex, uint8_t value) {
+void op_CXNN(uint8_t *v, uint8_t registerIndex, uint8_t value) {
     int randNum = rand();
     int result = randNum & value;  // binary AND randNum with NN value
 
     v[registerIndex] = result;
 }
 
-void Op_DXYN(Chip8Context **chip8Context, uint16_t instruction) {
+void op_DXYN(Chip8Context **chip8Context, uint16_t instruction) {
     int xIndex = (instruction & 0x0F00) >> 8;
     int yIndex = (instruction & 0x00F0) >> 4;
 
@@ -313,11 +313,11 @@ void Op_DXYN(Chip8Context **chip8Context, uint16_t instruction) {
     }
 }
 
-void Op_FX1E(uint8_t *v, uint16_t *index, uint8_t registerIndex) {
+void op_FX1E(uint8_t *v, uint16_t *index, uint8_t registerIndex) {
     *index += v[registerIndex];
 }
 
-void Op_FX33(Chip8Context **chip8Context, uint8_t registerIndex) {
+void op_FX33(Chip8Context **chip8Context, uint8_t registerIndex) {
     uint8_t number = (*chip8Context)->v[registerIndex];
 
     uint8_t numberDigits[3];
@@ -330,14 +330,14 @@ void Op_FX33(Chip8Context **chip8Context, uint8_t registerIndex) {
     }
 }
 
-void Op_FX55(Chip8Context **chip8Context, uint8_t registerIndex) {
+void op_FX55(Chip8Context **chip8Context, uint8_t registerIndex) {
     for (int i = 0; i <= registerIndex; i++) {
         (*chip8Context)->memory[(*chip8Context)->index + i] = (*chip8Context)->v[i];
     }
     (*chip8Context)->index += registerIndex + 1;
 }
 
-void Op_FX65(Chip8Context **chip8Context, uint8_t registerIndex) {
+void op_FX65(Chip8Context **chip8Context, uint8_t registerIndex) {
     for (int i = 0; i <= registerIndex; i++) {
         (*chip8Context)->v[i] = (*chip8Context)->memory[(*chip8Context)->index + i];
     }
