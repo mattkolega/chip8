@@ -72,7 +72,7 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
     // Decode and Execute
     switch (getFirstNibble(instruction)) {  // Check first nibble of instruction
         case 0x0:
-            switch (getSecondNibble(instruction)) {  // Check second half of instruction
+            switch (getLastHalfInstruct(instruction)) {  // Check second half of instruction
                 case 0xE0:
                     op_00E0((*chip8Context)->display);
                     break;
@@ -248,8 +248,8 @@ void op_8XY3(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
 }
 
 void op_8XY4(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
-    uint8_t sum = v[xRegisterIndex] + v[yRegisterIndex];
-    v[xRegisterIndex] = sum;
+    uint16_t sum = v[xRegisterIndex] + v[yRegisterIndex];
+    v[xRegisterIndex] = sum & 0xFF;
     if (sum > 255)  // Test for overflow
         v[0xF] = 1;
     else
@@ -257,29 +257,39 @@ void op_8XY4(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
 }
 
 void op_8XY5(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
-    v[xRegisterIndex] -= v[yRegisterIndex];
+    uint8_t vF;
+
     if (v[xRegisterIndex] > v[yRegisterIndex])
-        v[0xF] = 1;
+        vF = 1;
     else
-        v[0xF] = 0;
+        vF = 0;
+
+    v[xRegisterIndex] -= v[yRegisterIndex];
+    v[0xF] = vF;
 }
 
 void op_8XY6(uint8_t *v, int xRegisterIndex) {
-    v[0xF] = (v[xRegisterIndex] & 0b00000001);  // Set VF to value of bit to be shifted
+    uint8_t vF = (v[xRegisterIndex] & 0b00000001);  // Set VF to value of bit to be shifted
     v[xRegisterIndex] >>= 1;
+    v[0xF] = vF;
 }
 
 void op_8XY7(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
-    v[xRegisterIndex] = v[yRegisterIndex] - v[xRegisterIndex];
+    uint8_t vF;
+
     if (v[yRegisterIndex] > v[xRegisterIndex])
-        v[0xF] = 1;
+        vF = 1;
     else
-        v[0xF] = 0;
+        vF = 0;
+
+    v[xRegisterIndex] = v[yRegisterIndex] - v[xRegisterIndex];
+    v[0xF] = vF;
 }
 
 void op_8XYE(uint8_t *v, int xRegisterIndex) {
-    v[0xF] = (v[xRegisterIndex] & 0b10000000) >> 7;  // Set VF to value of bit to be shifted
+    uint8_t vF = (v[xRegisterIndex] & 0b10000000) >> 7;  // Set VF to value of bit to be shifted
     v[xRegisterIndex] <<= 1;
+    v[0xF] = vF;
 }
 
 void op_9XY0(uint16_t *pc, uint8_t *v, uint16_t instruction) {
