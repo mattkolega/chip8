@@ -8,6 +8,7 @@
 void initContext(Chip8Context **chip8Context, char* romFilename) {
     *chip8Context = calloc(1, sizeof(Chip8Context));
     loadRom(romFilename, (*chip8Context)->memory);
+    loadFontData((*chip8Context)->memory);
     (*chip8Context)->pc = 512;
 }
 
@@ -35,6 +36,30 @@ void loadRom(char *filename, uint8_t *memory) {
         memory[memoryIndex] = buffer[i];
         memoryIndex++;
     }
+}
+
+void loadFontData(uint8_t *memory) {
+    uint8_t fontData[80] = {
+        0xF0, 0x90, 0x90, 0x90, 0xF0,  // 0
+        0x20, 0x60, 0x20, 0x20, 0x70,  // 1
+        0xF0, 0x10, 0xF0, 0x80, 0xF0,  // 2
+        0xF0, 0x10, 0xF0, 0x10, 0xF0,  // 3
+        0x90, 0x90, 0xF0, 0x10, 0x10,  // 4
+        0xF0, 0x80, 0xF0, 0x10, 0xF0,  // 5
+        0xF0, 0x80, 0xF0, 0x90, 0xF0,  // 6
+        0xF0, 0x10, 0x20, 0x40, 0x40,  // 7
+        0xF0, 0x90, 0xF0, 0x90, 0xF0,  // 8
+        0xF0, 0x90, 0xF0, 0x10, 0xF0,  // 9
+        0xF0, 0x90, 0xF0, 0x90, 0x90,  // A
+        0xE0, 0x90, 0xE0, 0x90, 0xE0,  // B
+        0xF0, 0x80, 0x80, 0x80, 0xF0,  // C
+        0xE0, 0x90, 0x90, 0x90, 0xE0,  // D
+        0xF0, 0x80, 0xF0, 0x80, 0xF0,  // E
+        0xF0, 0x80, 0xF0, 0x80, 0x80   // F
+    };
+
+    for (int i = 0; i < 80; i++)
+        memory[0x050 + i] = fontData[i];
 }
 
 void fetchExecuteCycle(Chip8Context **chip8Context) {
@@ -145,6 +170,7 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
                     }
                     break;
                 case 0x2:
+                    op_FX29((*chip8Context)->v, &(*chip8Context)->index, getSecondNibble(instruction));
                     break;
                 case 0x3:
                     op_FX33(chip8Context, getSecondNibble(instruction));
@@ -316,6 +342,10 @@ void op_DXYN(Chip8Context **chip8Context, uint16_t instruction) {
 
 void op_FX1E(uint8_t *v, uint16_t *index, uint8_t registerIndex) {
     *index += v[registerIndex];
+}
+
+void op_FX29(uint8_t *v, uint16_t *index, uint8_t registerIndex) {
+    *index = 0x050 + (v[registerIndex] * 5);  // Font data is stored at address 0x050
 }
 
 void op_FX33(Chip8Context **chip8Context, uint8_t registerIndex) {

@@ -23,6 +23,9 @@ void initContext(Chip8Context **chip8Context, char *fileName);
 // Loads ROM file into CHIP-8 memory
 void loadRom(char *filename, uint8_t *memory);
 
+// Loads font data into CHIP-8 memory
+void loadFontData(uint8_t *memory);
+
 // Performs one cycle of the CHIP-8 fetch-decode-execute cycle
 void fetchExecuteCycle(Chip8Context **chip8Context);
 
@@ -101,6 +104,9 @@ void op_DXYN(Chip8Context **chip8Context, uint16_t instruction);
 
 // Adds value in VX to index register
 void op_FX1E(uint8_t *v, uint16_t *index, uint8_t registerIndex);
+
+// Sets index register to address corresponding to a hexadecimal character
+void op_FX29(uint8_t *v, uint16_t *index, uint8_t registerIndex);
 
 // Converts VX value to binary-coded decimal and store result at address I, I+1, I+2
 void op_FX33(Chip8Context **chip8Context, uint8_t registerIndex);
