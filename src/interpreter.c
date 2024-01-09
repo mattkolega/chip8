@@ -33,11 +33,115 @@ void init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, C
     initContext(chip8Context, romFilename);
 }
 
-void pollEvents(SDL_Event *event, bool *quit) {
+void pollEvents(SDL_Event *event, bool *quit, bool *keyState) {
     while (SDL_PollEvent(event)) {
         switch(event->type) {
             case SDL_QUIT:
                 *quit = true;
+                break;
+            case SDL_KEYDOWN:
+                switch(event->key.keysym.scancode) {
+                    case SDL_SCANCODE_1:
+                        keyState[0x1] = true;
+                        break;
+                    case SDL_SCANCODE_2:
+                        keyState[0x2] = true;
+                        break;
+                    case SDL_SCANCODE_3:
+                        keyState[0x3] = true;
+                        break;
+                    case SDL_SCANCODE_4:
+                        keyState[0xC] = true;
+                        break;
+                    case SDL_SCANCODE_Q:
+                        keyState[0x4] = true;
+                        break;
+                    case SDL_SCANCODE_W:
+                        keyState[0x5] = true;
+                        break;
+                    case SDL_SCANCODE_E:
+                        keyState[0x6] = true;
+                        break;
+                    case SDL_SCANCODE_R:
+                        keyState[0xD] = true;
+                        break;
+                    case SDL_SCANCODE_A:
+                        keyState[0x7] = true;
+                        break;
+                    case SDL_SCANCODE_S:
+                        keyState[0x8] = true;
+                        break;
+                    case SDL_SCANCODE_D:
+                        keyState[0x9] = true;
+                        break;
+                    case SDL_SCANCODE_F:
+                        keyState[0xE] = true;
+                        break;
+                    case SDL_SCANCODE_Z:
+                        keyState[0xA] = true;
+                        break;
+                    case SDL_SCANCODE_X:
+                        keyState[0x0] = true;
+                        break;
+                    case SDL_SCANCODE_C:
+                        keyState[0xB] = true;
+                        break;
+                    case SDL_SCANCODE_V:
+                        keyState[0xF] = true;
+                        break;
+                }
+                break;
+            case SDL_KEYUP:
+                switch(event->key.keysym.scancode) {
+                    case SDL_SCANCODE_1:
+                        keyState[0x1] = false;
+                        break;
+                    case SDL_SCANCODE_2:
+                        keyState[0x2] = false;
+                        break;
+                    case SDL_SCANCODE_3:
+                        keyState[0x3] = false;
+                        break;
+                    case SDL_SCANCODE_4:
+                        keyState[0xC] = false;
+                        break;
+                    case SDL_SCANCODE_Q:
+                        keyState[0x4] = false;
+                        break;
+                    case SDL_SCANCODE_W:
+                        keyState[0x5] = false;
+                        break;
+                    case SDL_SCANCODE_E:
+                        keyState[0x6] = false;
+                        break;
+                    case SDL_SCANCODE_R:
+                        keyState[0xD] = false;
+                        break;
+                    case SDL_SCANCODE_A:
+                        keyState[0x7] = false;
+                        break;
+                    case SDL_SCANCODE_S:
+                        keyState[0x8] = false;
+                        break;
+                    case SDL_SCANCODE_D:
+                        keyState[0x9] = false;
+                        break;
+                    case SDL_SCANCODE_F:
+                        keyState[0xE] = false;
+                        break;
+                    case SDL_SCANCODE_Z:
+                        keyState[0xA] = false;
+                        break;
+                    case SDL_SCANCODE_X:
+                        keyState[0x0] = false;
+                        break;
+                    case SDL_SCANCODE_C:
+                        keyState[0xB] = false;
+                        break;
+                    case SDL_SCANCODE_V:
+                        keyState[0xF] = false;
+                        break;
+                }
                 break;
         }
     }

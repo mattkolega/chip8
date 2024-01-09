@@ -15,6 +15,8 @@ typedef struct Chip8Context {
     uint8_t delayTimer;
     uint8_t soundTimer;
     uint8_t v[16];  // Variable registers
+    bool keyState[16];  // Tracks whether keys corresponding to hex chars are pressed or not
+    bool previousKeyState[16];  // Used to track key press and release for FX0A
 } Chip8Context;
 
 // Sets up chip8Context
@@ -102,8 +104,17 @@ void op_CXNN(uint8_t *v, uint8_t registerIndex, uint8_t value);
 // Draws n-width sprite to screen
 void op_DXYN(Chip8Context **chip8Context, uint16_t instruction);
 
+// Skips one instruction if key equal to VX value is pressed
+void op_EX9E(Chip8Context **chip8Context, uint8_t registerIndex);
+
+// Skips one instruction if key equal to VX value is not pressed
+void op_EXA1(Chip8Context **chip8Context, uint8_t registerIndex);
+
 // Sets VX to delayTimer value
 void op_FX07(uint8_t *v, uint8_t *delayTimer, uint8_t registerIndex);
+
+// Waits for key to be pressed and adds keyvalue to VX
+void op_FX0A(Chip8Context **chip8Context, uint8_t registerIndex);
 
 // Sets delayTimer to VX value
 void op_FX15(uint8_t *v, uint8_t *delayTimer, uint8_t registerIndex);

@@ -11,7 +11,7 @@
 void init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context, char *romFilename);
 
 // Handles SDL events
-void pollEvents(SDL_Event *event, bool *quit);
+void pollEvents(SDL_Event *event, bool *quit, bool *keyState);
 
 // Updates and draws to window
 void updateScreen(SDL_Renderer *renderer, SDL_Texture *texture, bool display[32][64]);

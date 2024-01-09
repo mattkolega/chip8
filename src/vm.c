@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include <SDL.h>
 
 #include "vm.h"
 #include "utils.h"
@@ -148,6 +149,16 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
         case 0xD:
             op_DXYN(chip8Context, instruction);
             break;
+        case 0xE:
+            switch (getLastHalfInstruct(instruction)) {
+                case 0x9E:
+                    op_EX9E(chip8Context, getSecondNibble(instruction));
+                    break;
+                case 0xA1:
+                    op_EXA1(chip8Context, getSecondNibble(instruction));
+                    break;
+            }
+            break;
         case 0xF:
             switch (getThirdNibble(instruction)) {
                 case 0x0:
@@ -156,6 +167,7 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
                             op_FX07((*chip8Context)->v, &(*chip8Context)->delayTimer, getSecondNibble(instruction));
                             break;
                         case 0xA:
+                            op_FX0A(chip8Context, getSecondNibble(instruction));
                             break;
                     }
                     break;
@@ -353,8 +365,44 @@ void op_DXYN(Chip8Context **chip8Context, uint16_t instruction) {
     }
 }
 
+void op_EX9E(Chip8Context **chip8Context, uint8_t registerIndex) {
+    if ((*chip8Context)->keyState[(*chip8Context)->v[registerIndex]] == true) {
+        (*chip8Context)->pc += 2;
+    }
+}
+
+void op_EXA1(Chip8Context **chip8Context, uint8_t registerIndex) {
+    if ((*chip8Context)->keyState[(*chip8Context)->v[registerIndex]] == false) {
+        (*chip8Context)->pc += 2;
+    }
+}
+
 void op_FX07(uint8_t *v, uint8_t *delayTimer, uint8_t registerIndex) {
     v[registerIndex] = *delayTimer;
+}
+
+void op_FX0A(Chip8Context **chip8Context, uint8_t registerIndex) {
+    // First check if any keys were previously pressed and are now released
+    for (int j = 0; j < 16; j++) {
+        if ((*chip8Context)->previousKeyState[j] == true) {
+            if ((*chip8Context)->keyState[j] == false) {
+                (*chip8Context)->v[registerIndex] = j;
+                memset((*chip8Context)->previousKeyState, 0, sizeof((*chip8Context)->previousKeyState));  // Clear array
+                return;
+            }
+        }
+    }
+
+    memset((*chip8Context)->previousKeyState, 0, sizeof((*chip8Context)->previousKeyState));  // Clear array
+
+    // If no keys were released, check for pressed keys to add to previousKeyState to be checked next cycle
+    for (int i = 0; i < 16; i++) {
+        if ((*chip8Context)->keyState[i] == true) {
+            (*chip8Context)->previousKeyState[i] = true;
+        }
+    }
+
+    (*chip8Context)->pc -= 2;  // De-increment PC to make block further instruction execution
 }
 
 void op_FX15(uint8_t *v, uint8_t *delayTimer, uint8_t registerIndex) {

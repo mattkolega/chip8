@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     while (!quit) {
         uint64_t start = SDL_GetPerformanceCounter();
 
-        pollEvents(&evt, &quit);
+        pollEvents(&evt, &quit, chip8Context->keyState);
 
         for (int i = 0; i < CYCLES_PER_FRAME; i++)  // Run fetchExecuteCycle roughly 500 times per second
             fetchExecuteCycle(&chip8Context);
