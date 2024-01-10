@@ -177,7 +177,7 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
                             op_FX15((*chip8Context)->v, &(*chip8Context)->delayTimer, getSecondNibble(instruction));
                             break;
                         case 0x8:
-                            op_FX15((*chip8Context)->v, &(*chip8Context)->soundTimer, getSecondNibble(instruction));
+                            op_FX18((*chip8Context)->v, &(*chip8Context)->soundTimer, getSecondNibble(instruction));
                             break;
                         case 0xE:
                             op_FX1E((*chip8Context)->v, &(*chip8Context)->index, getSecondNibble(instruction));
