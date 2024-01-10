@@ -80,14 +80,14 @@ void op_8XY4(uint8_t *v, int xRegisterIndex, int yRegisterIndex);
 // Sets VX to VX minus VY
 void op_8XY5(uint8_t *v, int xRegisterIndex, int yRegisterIndex);
 
-// Shifts VX value 1 bit to the right
-void op_8XY6(uint8_t *v, int xRegisterIndex);
+// Sets VX to VY and shifts VX 1 bit to the right
+void op_8XY6(uint8_t *v, int xRegisterIndex, int yRegisterIndex);
 
 // Sets VX to VY minus VX
 void op_8XY7(uint8_t *v, int xRegisterIndex, int yRegisterIndex);
 
-// Shifts VX value 1 bit to the left
-void op_8XYE(uint8_t *v, int xRegisterIndex);
+// Sets VX to VY and shifts VX 1 bit to the left
+void op_8XYE(uint8_t *v, int xRegisterIndex, int yRegisterIndex);
 
 // Skips instruction if VX and VY aren't equal
 void op_9XY0(uint16_t *pc, uint8_t *v, uint16_t instruction);

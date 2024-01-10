@@ -124,13 +124,13 @@ void fetchExecuteCycle(Chip8Context **chip8Context) {
                     op_8XY5((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0x6:
-                    op_8XY6((*chip8Context)->v, getSecondNibble(instruction));
+                    op_8XY6((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0x7:
                     op_8XY7((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
                 case 0xE:
-                    op_8XYE((*chip8Context)->v, getSecondNibble(instruction));
+                    op_8XYE((*chip8Context)->v, getSecondNibble(instruction), getThirdNibble(instruction));
                     break;
             }
             break;
@@ -252,14 +252,17 @@ void op_8XY0(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
 
 void op_8XY1(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] |= v[yRegisterIndex];
+    v[0xF] = 0;
 }
 
 void op_8XY2(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] &= v[yRegisterIndex];
+    v[0xF] = 0;
 }
 
 void op_8XY3(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[xRegisterIndex] ^= v[yRegisterIndex];
+    v[0xF] = 0;
 }
 
 void op_8XY4(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
@@ -283,7 +286,8 @@ void op_8XY5(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[0xF] = vF;
 }
 
-void op_8XY6(uint8_t *v, int xRegisterIndex) {
+void op_8XY6(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+    v[xRegisterIndex] = v[yRegisterIndex];
     uint8_t vF = (v[xRegisterIndex] & 0b00000001);  // Set VF to value of bit to be shifted
     v[xRegisterIndex] >>= 1;
     v[0xF] = vF;
@@ -301,7 +305,8 @@ void op_8XY7(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
     v[0xF] = vF;
 }
 
-void op_8XYE(uint8_t *v, int xRegisterIndex) {
+void op_8XYE(uint8_t *v, int xRegisterIndex, int yRegisterIndex) {
+    v[xRegisterIndex] = v[yRegisterIndex];
     uint8_t vF = (v[xRegisterIndex] & 0b10000000) >> 7;  // Set VF to value of bit to be shifted
     v[xRegisterIndex] <<= 1;
     v[0xF] = vF;
@@ -355,11 +360,11 @@ void op_DXYN(Chip8Context **chip8Context, uint16_t instruction) {
             bitmask = bitmask >> 1;
             bitshiftAmount -= 1;
 
-            if (spriteBit ^ (*chip8Context)->display[currentYCoord][currentXCoord]) {
+            if (spriteBit ^ (*chip8Context)->display[currentYCoord][currentXCoord]) {  // Binary XOR
                 (*chip8Context)->display[currentYCoord][currentXCoord] = true;
-            } else {
+            } else if (spriteBit & (*chip8Context)->display[currentYCoord][currentXCoord]) {  // Binary AND
                 (*chip8Context)->display[currentYCoord][currentXCoord] = false;
-                (*chip8Context)->v[0xF] = 1;  // Set VF register to 1
+                (*chip8Context)->v[0xF] = 1;
             }
         }
     }
