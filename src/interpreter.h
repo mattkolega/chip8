@@ -8,7 +8,7 @@
 #include "vm.h"
 
 // Initialises SDL and Chip8Context
-void init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context, char *romFilename);
+void init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context);
 
 // Handles SDL events
 void pollEvents(SDL_Event *event, bool *quit, bool *keyState);

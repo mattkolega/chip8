@@ -9,22 +9,13 @@ const int FRAMES_PER_SECOND = 60;
 const int CYCLES_PER_FRAME = 500 / FRAMES_PER_SECOND;
 
 int main(int argc, char *argv[]) {
-    char *romFilename = NULL;
-
-    if (argc == 2) {
-        romFilename = argv[1];
-    } else {
-        printf("ROM filename is expected as an argument.\n");
-        return EXIT_FAILURE;
-    }
-
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
     SDL_Texture *texture = NULL;
 
     Chip8Context *chip8Context = NULL;
 
-    init(&window, &renderer, &texture, &chip8Context, romFilename);
+    init(&window, &renderer, &texture, &chip8Context);
 
     SDL_Event evt;
     bool quit = false;

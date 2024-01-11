@@ -5,7 +5,7 @@
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 640;
 
-void init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context, char *romFilename) {
+void init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "SDL could not be initialised! SDL_ErrorL %s\n", SDL_GetError());
     }
@@ -30,7 +30,7 @@ void init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, C
 
     srand(time(NULL));  // Set seed for random number generator
 
-    initContext(chip8Context, romFilename);
+    initContext(chip8Context);
 }
 
 void pollEvents(SDL_Event *event, bool *quit, bool *keyState) {

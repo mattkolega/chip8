@@ -1,21 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "tinyfiledialogs.h"
+
 #include "instructions.h"
 #include "utils.h"
 #include "vm.h"
 
-void initContext(Chip8Context **chip8Context, char* romFilename) {
+void initContext(Chip8Context **chip8Context) {
     *chip8Context = calloc(1, sizeof(Chip8Context));
-    loadRom(romFilename, (*chip8Context)->memory);
+    loadRom((*chip8Context)->memory);
     loadFontData((*chip8Context)->memory);
     (*chip8Context)->pc = 512;
 }
 
-void loadRom(char *filename, uint8_t *memory) {
-    FILE *fptr;
+void loadRom(uint8_t *memory) {
+    char const *filterPatterns[1]={"*.ch8"};  // Only display .ch8 files in file dialog
 
-    fptr = fopen(filename, "rb");
+    const char *filename = tinyfd_openFileDialog(
+        "Choose CHIP-8 Rom",  // Dialog title
+        "./",                 // Default path
+        1,                    // Num of filter patterns
+        filterPatterns,       // Filter patterns
+        ".ch8" ,              // Filter description
+        0                     // Allow multiple files
+    );
+
+    FILE *fptr = fopen(filename, "rb");
 
     if (fptr == NULL) {
         printf("Error opening Chip-8 rom.");
