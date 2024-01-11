@@ -12,6 +12,8 @@ add_executable(chip-8 src/main.c
         src/interpreter.h
         src/utils.c
         src/utils.h
+        src/instructions.c
+        src/instructions.h
 )
 
 target_link_libraries(chip-8
