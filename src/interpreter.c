@@ -5,6 +5,26 @@
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 640;
 
+const int FOREGROUND_COLOURS[6*3] = {
+    255, 255, 255,  // White
+    255, 162, 150,  // Red
+    111, 190, 138,  // Green
+    105, 137, 170,  // Blue
+    255, 220, 150,  // Yellow
+    195, 115, 171   // Pink
+};
+
+const int BACKGROUND_COLOURS[6*3] = {
+    0, 0, 0,       // White
+    189, 69, 53,   // Red
+    39, 138, 73,   // Green
+    41, 81, 123,   // Blue
+    189, 144, 53,  // Yellow
+    143, 40, 112   // Pink
+};
+
+int colourIndex = 0;  // Used for choosing display colour
+
 int init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_Log("Fatal Error! SDL could not be initialised! SDL_Error: %s\n", SDL_GetError());
@@ -145,6 +165,20 @@ void pollEvents(SDL_Event *event, bool *quit, bool *keyState) {
                     case SDL_SCANCODE_V:
                         keyState[0xF] = false;
                         break;
+                    case SDL_SCANCODE_LEFT:
+                        if (colourIndex == 0) {
+                            colourIndex = 15;
+                        } else {
+                            colourIndex -= 3;  // Subtract 3 because each colour consists of 3 ints (R, G, B)
+                        }
+                        break;
+                    case SDL_SCANCODE_RIGHT:
+                        if (colourIndex == 15) {
+                            colourIndex = 0;
+                        } else {
+                            colourIndex += 3;  // Add 3 because each colour consists of 3 ints (R, G, B)
+                        }
+                        break;
                 }
                 break;
         }
@@ -154,11 +188,11 @@ void pollEvents(SDL_Event *event, bool *quit, bool *keyState) {
 void updateScreen(SDL_Renderer *renderer, SDL_Texture *texture, bool display[32][64]) {
     // Render to texture
     SDL_SetRenderTarget(renderer, texture);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, BACKGROUND_COLOURS[colourIndex], BACKGROUND_COLOURS[colourIndex+1], BACKGROUND_COLOURS[colourIndex+2], 255);
     SDL_RenderClear(renderer);
 
     // Render rects to texture
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, FOREGROUND_COLOURS[colourIndex], FOREGROUND_COLOURS[colourIndex+1], FOREGROUND_COLOURS[colourIndex+2], 255);
     drawRects(renderer, display);
 
     // Render to window
