@@ -1,36 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <SDL.h>
 #include "tinyfiledialogs.h"
 
 #include "instructions.h"
 #include "utils.h"
 #include "vm.h"
 
-void initContext(Chip8Context **chip8Context) {
+int initContext(Chip8Context **chip8Context) {
     *chip8Context = calloc(1, sizeof(Chip8Context));
-    loadRom((*chip8Context)->memory);
+    if (loadRom((*chip8Context)->memory) == -1) return -1;
     loadFontData((*chip8Context)->memory);
     (*chip8Context)->pc = 512;
 }
 
-void loadRom(uint8_t *memory) {
+int loadRom(uint8_t *memory) {
     char const *filterPatterns[1]={"*.ch8"};  // Only display .ch8 files in file dialog
 
-    const char *filename = tinyfd_openFileDialog(
-        "Choose CHIP-8 Rom",  // Dialog title
-        "./",                 // Default path
-        1,                    // Num of filter patterns
-        filterPatterns,       // Filter patterns
-        ".ch8" ,              // Filter description
-        0                     // Allow multiple files
-    );
+    FILE *fptr;
 
-    FILE *fptr = fopen(filename, "rb");
+    while (true) {
+        const char *filename = tinyfd_openFileDialog(
+                "Choose CHIP-8 Rom",  // Dialog title
+                "./",                 // Default path
+                1,                    // Num of filter patterns
+                filterPatterns,       // Filter patterns
+                ".ch8" ,              // Filter description
+                0                     // Allow multiple files
+        );
 
-    if (fptr == NULL) {
-        printf("Error opening Chip-8 rom.");
-        exit(EXIT_FAILURE);
+        if (filename == NULL) {
+            SDL_Log("File dialog closed. Program execution is now aborting.");
+            return -1;
+        }
+
+        fptr = fopen(filename, "rb");
+
+        if (fptr == NULL) {
+            SDL_Log("Error opening Chip-8 rom. Please try again.");
+        } else {
+            break;  // Break loop if rom file has successfully opened
+        }
     }
 
     fseek(fptr, 0l, SEEK_END);

@@ -5,32 +5,36 @@
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 640;
 
-void init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context) {
+int init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        fprintf(stderr, "SDL could not be initialised! SDL_ErrorL %s\n", SDL_GetError());
+        SDL_Log("Fatal Error! SDL could not be initialised! SDL_Error: %s\n", SDL_GetError());
+        return -1;
     }
 
     *window = SDL_CreateWindow( "Chip-8 Interpreter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
     if (*window == NULL) {
-        fprintf(stderr, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        SDL_Log("Fatal Error! Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        return -1;
     }
 
     *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
 
     if (*renderer == NULL) {
-        fprintf(stderr, "Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        SDL_Log("Fatal Error! Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        return -1;
     }
 
     *texture = SDL_CreateTexture(*renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     if (*texture == NULL) {
-        fprintf(stderr, "Texture could not be created! SDL_Error: %s\n", SDL_GetError());
+        SDL_Log("Fatal Error! Screen Texture could not be created! SDL_Error: %s\n", SDL_GetError());
+        return -1;
     }
 
     srand(time(NULL));  // Set seed for random number generator
 
-    initContext(chip8Context);
+    if (initContext(chip8Context) == -1) return -1;
 }
 
 void pollEvents(SDL_Event *event, bool *quit, bool *keyState) {

@@ -20,10 +20,10 @@ typedef struct Chip8Context {
 } Chip8Context;
 
 // Sets up chip8Context
-void initContext(Chip8Context **chip8Context);
+int initContext(Chip8Context **chip8Context);
 
 // Loads ROM file into CHIP-8 memory
-void loadRom(uint8_t *memory);
+int loadRom(uint8_t *memory);
 
 // Loads font data into CHIP-8 memory
 void loadFontData(uint8_t *memory);

@@ -15,7 +15,10 @@ int main(int argc, char *argv[]) {
 
     Chip8Context *chip8Context = NULL;
 
-    init(&window, &renderer, &texture, &chip8Context);
+    if (init(&window, &renderer, &texture, &chip8Context) == -1) {
+        kill(window, renderer, texture, chip8Context);
+        return -1;
+    }
 
     SDL_Event evt;
     bool quit = false;
@@ -47,5 +50,5 @@ int main(int argc, char *argv[]) {
 
     kill(window, renderer, texture, chip8Context);
 
-    return EXIT_SUCCESS;
+    return 0;
 }
