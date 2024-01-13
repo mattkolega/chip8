@@ -3,6 +3,8 @@ project(chip-8 C)
 
 set(CMAKE_C_STANDARD 17)
 
+find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
+
 find_package(SDL2 CONFIG REQUIRED)
 find_package(tinyfiledialogs CONFIG REQUIRED)
 
@@ -15,7 +17,11 @@ add_executable(chip-8 src/main.c
         src/utils.h
         src/instructions.c
         src/instructions.h
+        src/audio.c
+        src/audio.h
 )
+
+target_include_directories(chip-8 PRIVATE ${MINIAUDIO_INCLUDE_DIRS})
 
 target_link_libraries(chip-8
         PRIVATE

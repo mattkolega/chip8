@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 
+#include "audio.h"
 #include "interpreter.h"
 #include "vm.h"
 
@@ -20,6 +21,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    AudioContext audioContext = initAudio();
+
     SDL_Event evt;
     bool quit = false;
 
@@ -33,8 +36,13 @@ int main(int argc, char *argv[]) {
 
         if (chip8Context->delayTimer > 0)
             (chip8Context->delayTimer)--;
-        if (chip8Context->soundTimer > 0)
+
+        if (chip8Context->soundTimer > 0) {
             (chip8Context->soundTimer)--;
+            startPlayback(audioContext.device);  // Play sound as long as timer is above 0
+        } else {
+            stopPlayback(audioContext.device);
+        }
 
         updateScreen(renderer, texture, chip8Context->display);
 
@@ -48,6 +56,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    destroyAudio(audioContext);
     kill(window, renderer, texture, chip8Context);
 
     return 0;

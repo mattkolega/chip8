@@ -8,5 +8,8 @@
   }, {
     "name" : "tinyfiledialogs",
     "version>=" : "3.8.8#4"
+  }, {
+    "name" : "miniaudio",
+    "version>=" : "0.11.14"
   } ]
 }
