@@ -1,6 +1,6 @@
 #include <time.h>
 
-#include "interpreter.h"
+#include "application.h"
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 640;

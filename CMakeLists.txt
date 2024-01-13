@@ -11,8 +11,8 @@ find_package(tinyfiledialogs CONFIG REQUIRED)
 add_executable(${PROJECT_NAME} src/main.c
         src/vm.c
         src/vm.h
-        src/interpreter.c
-        src/interpreter.h
+        src/application.c
+        src/application.h
         src/utils.c
         src/utils.h
         src/instructions.c

@@ -2,8 +2,8 @@
 
 #include <SDL.h>
 
+#include "application.h"
 #include "audio.h"
-#include "interpreter.h"
 #include "vm.h"
 
 const int FRAMES_PER_SECOND = 60;
