@@ -8,7 +8,7 @@ find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
 find_package(SDL2 CONFIG REQUIRED)
 find_package(tinyfiledialogs CONFIG REQUIRED)
 
-add_executable(chip-8 src/main.c
+add_executable(${PROJECT_NAME} src/main.c
         src/vm.c
         src/vm.h
         src/interpreter.c
@@ -21,9 +21,9 @@ add_executable(chip-8 src/main.c
         src/audio.h
 )
 
-target_include_directories(chip-8 PRIVATE ${MINIAUDIO_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${MINIAUDIO_INCLUDE_DIRS})
 
-target_link_libraries(chip-8
+target_link_libraries(${PROJECT_NAME}
         PRIVATE
         $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
         $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
