@@ -55,6 +55,10 @@ int loadRom(uint8_t *memory) {
     size_t memoryIndex = 512;
 
     for (size_t i = 0; i < fileSize; i++) {
+        if (i > 4095) {  // Prevent memory array out of bounds error
+            SDL_Log("Fatal Error! ROM filesize is too large to fit in CHIP8 memory.");
+            return -1;
+        }
         memory[memoryIndex] = buffer[i];
         memoryIndex++;
     }

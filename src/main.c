@@ -14,10 +14,16 @@ int main(int argc, char *argv[]) {
     SDL_Renderer *renderer = NULL;
     SDL_Texture *texture = NULL;
 
+    if (initSDL(&window, &renderer, &texture) == -1) {
+        closeSDL(window, renderer, texture);
+        return -1;
+    }
+
     Chip8Context *chip8Context = NULL;
 
-    if (init(&window, &renderer, &texture, &chip8Context) == -1) {
-        kill(window, renderer, texture, chip8Context);
+    if (initContext(&chip8Context) == -1) {
+        free(chip8Context);
+        closeSDL(window, renderer, texture);
         return -1;
     }
 
@@ -57,7 +63,8 @@ int main(int argc, char *argv[]) {
     }
 
     destroyAudio(audioContext);
-    kill(window, renderer, texture, chip8Context);
+    free(chip8Context);
+    closeSDL(window, renderer, texture);
 
     return 0;
 }

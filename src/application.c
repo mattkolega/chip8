@@ -25,7 +25,7 @@ const int BACKGROUND_COLOURS[6*3] = {
 
 int colourIndex = 0;  // Used for choosing display colour
 
-int init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Chip8Context **chip8Context) {
+int initSDL(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_Log("Fatal Error! SDL could not be initialised! SDL_Error: %s\n", SDL_GetError());
         return -1;
@@ -53,8 +53,6 @@ int init(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture **texture, Ch
     }
 
     srand(time(NULL));  // Set seed for random number generator
-
-    if (initContext(chip8Context) == -1) return -1;
 }
 
 void pollEvents(SDL_Event *event, bool *quit, bool *keyState) {
@@ -224,12 +222,10 @@ void drawRects(SDL_Renderer *renderer, bool display[32][64]) {
     SDL_RenderFillRects(renderer, rectBuffer, rectCount);
 }
 
-void kill(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *texture, Chip8Context *chip8Context) {
+void closeSDL(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *texture) {
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-
-    free(chip8Context);
 
     SDL_Quit();
 }
