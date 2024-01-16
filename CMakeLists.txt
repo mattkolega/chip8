@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.26)
-project(chip-8 C)
+cmake_minimum_required(VERSION 3.16)
+project(chip8 C)
 
 set(CMAKE_C_STANDARD 17)
 
