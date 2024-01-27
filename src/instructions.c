@@ -1,7 +1,8 @@
+#include "instructions.h"
+
 #include <stdlib.h>
 #include <string.h>
 
-#include "instructions.h"
 #include "utils.h"
 
 void op_00E0(bool display[][64]) {

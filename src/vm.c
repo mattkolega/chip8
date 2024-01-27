@@ -1,3 +1,5 @@
+#include "vm.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,7 +8,6 @@
 
 #include "instructions.h"
 #include "utils.h"
-#include "vm.h"
 
 int initContext(Chip8Context **chip8Context) {
     *chip8Context = calloc(1, sizeof(Chip8Context));
