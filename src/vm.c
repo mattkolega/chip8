@@ -48,7 +48,7 @@ int loadRom(uint8_t *memory) {
     long fileSize = ftell(fptr);
     rewind(fptr);
 
-    unsigned char buffer[fileSize];
+    unsigned char *buffer = malloc(fileSize);
 
     fread(buffer, sizeof(char), fileSize, fptr);
 
@@ -57,11 +57,14 @@ int loadRom(uint8_t *memory) {
     for (size_t i = 0; i < fileSize; i++) {
         if (i > 4095) {  // Prevent memory array out of bounds error
             SDL_Log("Fatal Error! ROM filesize is too large to fit in CHIP8 memory.");
+            free(buffer);
             return -1;
         }
         memory[memoryIndex] = buffer[i];
         memoryIndex++;
     }
+
+    free(buffer);
 }
 
 void loadFontData(uint8_t *memory) {

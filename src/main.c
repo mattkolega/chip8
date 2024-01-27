@@ -6,8 +6,8 @@
 #include "audio.h"
 #include "vm.h"
 
-const int FRAMES_PER_SECOND = 60;
-const int CYCLES_PER_FRAME = 500 / FRAMES_PER_SECOND;
+#define FRAMES_PER_SECOND 60
+#define CYCLES_PER_FRAME (500 / FRAMES_PER_SECOND)
 
 int main(int argc, char *argv[]) {
     SDL_Window *window = NULL;
