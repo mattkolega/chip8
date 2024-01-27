@@ -1,37 +1,30 @@
 # CHIP-8
 A fully-functional CHIP-8 interpreter written in C and SDL2. Mimics the behaviour of the COSMAC VIP with all instructions implemented as well as sound.
 ## Build
-Tested on both Windows using CLion and MinGW, and Linux using the command line. \
-Ensure vcpkg is installed and environment variables are setup as described in this [guide](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-bash).
+Tested on both Windows using MSVC and Linux using GCC. \
+Ensure xmake is installed as described in this [guide](https://xmake.io/#/guide/installation).
 ### Dependencies
-- GCC
-- Ninja
-- CMake >= 3.19
-- libsdl2-dev (Vcpkg won't install all sdl dependencies by itself)
+- MSVC (on Windows)
+- GCC (on Unix)
+- xmake
 ```shell
 mkdir chip8
 git clone https://github.com/mattkolega/chip8.git
 cd chip8
-mkdir build
-cmake -B build -S . --preset=linux
-cmake --build build
+xmake
+xmake run chip8
 ```
 ## Usage
-Navigate to the build folder and run `./chip8`.
+Navigate through the build directory and run `./chip8`.
 The interpreter requires `.ch8` files as ROM files which are chosen with a file dialog.
 ### Controls
 Original CHIP-8 computers supported hexadecimal keypads for input. The interpreter maps those keys to the left side of a qwerty keyboard.
 The keys needed to be pressed during execution depend on the ROM file.
 ```
-+---+---+---+---+      +---+---+---+---+
-| 1 | 2 | 3 | C |      | 1 | 2 | 3 | 4 |
-+---+---+---+---+      +---+---+---+---+
-| 4 | 5 | 6 | D |      | Q | W | E | R |
-+---+---+---+---+  ->  +---+---+---+---+
-| 7 | 8 | 9 | E |      | A | S | D | F |
-+---+---+---+---+      +---+---+---+---+
-| A | 0 | B | F |      | Z | X | C | V |
-+---+---+---+---+      +---+---+---+---+
+1 2 3 C      1 2 3 4
+4 5 6 D  ->  Q W E R
+7 8 9 E      A S D F
+A 0 B F      Z X C V
 ```
 The `left` and `right` arrow keys can be pressed during ROM execution to cycle through colour schemes for the display window.
 ## Future Ideas
