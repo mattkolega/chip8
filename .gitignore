@@ -1,5 +1,5 @@
 # CLion
-.idea/*
+.idea/
 
 # CMake
 cmake-build-*
@@ -33,3 +33,16 @@ cmake-build-*
 *.i*86
 *.x86_64
 *.hex
+
+# CHIP-8 Roms
+*.ch8
+
+# Xmake Cache
+.xmake/
+build/
+
+# MacOS Cache
+.DS_Store
+
+# VSCode Config
+.vscode/
